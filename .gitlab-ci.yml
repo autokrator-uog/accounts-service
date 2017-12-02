@@ -22,14 +22,14 @@ test:
   stage: test
   image: maven:3-jdk-8
   script:
-    - mvn test
+    - mvn -Deventbusclient.version=$EVENT_BUS_CLIENT_VERSION test
 
 build:
   stage: build
   image: maven:3-jdk-8
   script:
-    - mvn versions:set -DnewVersion=$VERSION
-    - mvn clean package
+    - mvn -Deventbusclient.version=$EVENT_BUS_CLIENT_VERSION versions:set -DnewVersion=$VERSION
+    - mvn -Deventbusclient.version=$EVENT_BUS_CLIENT_VERSION clean package
   artifacts:
     paths:
       - target/*.jar
