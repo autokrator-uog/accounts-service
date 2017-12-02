@@ -22,6 +22,7 @@ test:
   stage: test
   image: maven:3-jdk-8
   script:
+    - ls -la include/
     - mvn -Deventbusclient.version=$EVENT_BUS_CLIENT_VERSION test
 
 build:
