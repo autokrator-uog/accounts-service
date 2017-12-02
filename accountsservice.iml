@@ -9,6 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="original-eventbusclient-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-core:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-util:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
