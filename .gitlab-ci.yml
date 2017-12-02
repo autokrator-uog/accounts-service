@@ -6,23 +6,19 @@ variables:
   EVENT_BUS_CLIENT_VERSION: 1.0.113
 
 stages:
-  - get_dependencies
   - test
   - build
   - release
 
-fetch_client_lib:
-  stage: get_dependencies
-  image: appropriate/curl
-  script:
-    - mkdir -p include
-    - "curl -f -L -H \"PRIVATE-TOKEN: $SECRET_APIKEY\" -o include/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar \"http://sed-team-project/SED-DEV-group/event-bus-client-lib/builds/artifacts/$EVENT_BUS_CLIENT_BRANCH/raw/target/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar?job=build\""
+before_script:
+  - apt-get update && apt-get install -y --no-install-recommends curl
+  - mkdir -p include
+  - "curl -f -L -H \"PRIVATE-TOKEN: $SECRET_APIKEY\" -o include/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar \"http://sed-team-project/SED-DEV-group/event-bus-client-lib/builds/artifacts/$EVENT_BUS_CLIENT_BRANCH/raw/target/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar?job=build\""
 
 test:
   stage: test
   image: maven:3-jdk-8
   script:
-    - ls -la include/
     - mvn -Deventbusclient.version=$EVENT_BUS_CLIENT_VERSION test
 
 build:
