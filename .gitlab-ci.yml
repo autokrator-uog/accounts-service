@@ -12,8 +12,10 @@ stages:
 
 before_script:
   - mkdir -p include
-  - "curl -f -L -H \"PRIVATE-TOKEN: $SECRET_APIKEY\" -o include/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar \"http://sed-team-project/SED-DEV-group/event-bus-client-lib/builds/artifacts/$EVENT_BUS_CLIENT_BRANCH/raw/target/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar?job=build\""
-  - jar tf include/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar
+  - cd include
+  - "wget --header \"PRIVATE-TOKEN: $SECRET_APIKEY\" \"http://sed-team-project/SED-DEV-group/event-bus-client-lib/builds/artifacts/$EVENT_BUS_CLIENT_BRANCH/raw/target/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar?job=build\""
+  - jar tf eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar
+  - cd ..
 
 test:
   stage: test
