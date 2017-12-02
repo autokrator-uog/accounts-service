@@ -180,10 +180,6 @@
                                     <mainClass>uk.ac.gla.sed.clients.accountsservice.AccountsServiceApplication</mainClass>
                                 </transformer>
                             </transformers>
-
-                            <!-- MOVE ORIGINAL AWAY -->
-                            <outputDirectory>${project.basedir}/target/jar_without_deps</outputDirectory>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
                         </configuration>
                     </execution>
                 </executions>
