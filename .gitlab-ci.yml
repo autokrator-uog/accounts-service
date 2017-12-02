@@ -14,7 +14,7 @@ fetch_client_lib:
   stage: get_dependencies
   image: appropriate/curl
   script:
-    - "curl -f -L -H \"PRIVATE-TOKEN: ${SECRET_APIKEY}\" -o include/foo.pdf 'https://sed-team-project/SED-DEV-group/event-bus-client-lib/builds/artifacts/patrick_modifications/target/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar?job=build'"
+    - "curl -f -L -H \"PRIVATE-TOKEN: ${SECRET_APIKEY}\" -o include/foo.pdf 'http://sed-team-project/SED-DEV-group/event-bus-client-lib/builds/artifacts/patrick_modifications/target/eventbusclient-$EVENT_BUS_CLIENT_VERSION.jar?job=build'"
 
 test:
   stage: test
