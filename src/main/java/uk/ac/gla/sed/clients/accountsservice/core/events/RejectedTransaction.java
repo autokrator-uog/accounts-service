@@ -8,13 +8,12 @@ public class RejectedTransaction extends Event {
     private String reason;
 
     public RejectedTransaction(PendingTransaction transaction, String reason) {
+        super("RejectedTransaction", Json.object().asObject());
+
         this.transactionId = transaction.getTransactionId();
-        this.reason = reason;
-
-        this.type = "RejectedTransaction";
-
-        this.data = Json.object().asObject();
         this.data.set("TransactionID", this.transactionId);
+
+        this.reason = reason;
         this.data.set("Reason", this.reason);
     }
 

@@ -34,8 +34,8 @@ public class PendingTransactionHandler {
     public void processTransaction(PendingTransaction transaction) {
         LOG.fine(String.format("Processing transaction %s", transaction.getTransactionId()));
 
-        int fromAccountId = Integer.valueOf(transaction.getFromAccountId());
-        int toAccountId = Integer.valueOf(transaction.getToAccountId());
+        int fromAccountId = transaction.getFromAccountId();
+        int toAccountId = transaction.getToAccountId();
 
         BigDecimal balanceFromAccount = dao.getBalance(fromAccountId);
         if (balanceFromAccount == null) {

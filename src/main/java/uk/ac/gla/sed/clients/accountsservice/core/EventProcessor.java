@@ -15,7 +15,11 @@ public class EventProcessor implements Managed {
     private final ExecutorService workers;
 
     public EventProcessor(String eventBusURL, AccountDAO dao, ExecutorService es) {
-        this.eventBusClient = new EventBusClient(eventBusURL);
+        this(new EventBusClient(eventBusURL), dao, es);
+    }
+
+    public EventProcessor(EventBusClient eventBusClient, AccountDAO dao, ExecutorService es) {
+        this.eventBusClient = eventBusClient;
         this.pendingTransactionHandler = new PendingTransactionHandler(dao, this.eventBusClient);
         this.workers = es;
     }
@@ -56,5 +60,9 @@ public class EventProcessor implements Managed {
                 }
             }
         }
+    }
+
+    public EventBusClient getEventBusClient() {
+        return eventBusClient;
     }
 }
