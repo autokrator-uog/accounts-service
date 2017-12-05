@@ -4,8 +4,8 @@ import com.eclipsesource.json.Json;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 
 public class RejectedTransaction extends Event {
-    private String transactionId;
-    private String reason;
+    private final String transactionId;
+    private final String reason;
 
     public RejectedTransaction(PendingTransaction transaction, String reason) {
         super("RejectedTransaction", Json.object().asObject());

@@ -1,7 +1,6 @@
 package uk.ac.gla.sed.clients.accountsservice.core.events;
 
 import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 
 import java.math.BigDecimal;

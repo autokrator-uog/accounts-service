@@ -14,6 +14,7 @@ import uk.ac.gla.sed.clients.accountsservice.rest.resources.HelloResource;
 
 import java.math.BigDecimal;
 
+@SuppressWarnings("WeakerAccess")
 public class AccountsServiceApplication extends Application<AccountsServiceConfiguration> {
     @Override
     public String getName() {

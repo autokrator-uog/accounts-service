@@ -17,14 +17,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("ConstantConditions")
 public class EventBusStepDefs implements En {
     private ExecutorService es;
     private EventProcessor eventProcessor;
 
-    DbTestFixture dbTestFixture;
-    DBI dbi;
-    AccountDAO dao;
-    EventBusClient mockedEventBusClient;
+    private DbTestFixture dbTestFixture;
+    private DBI dbi;
+    private AccountDAO dao;
+    private EventBusClient mockedEventBusClient;
 
     @Before
     public void setUp() throws Throwable {
@@ -42,7 +43,7 @@ public class EventBusStepDefs implements En {
     private void runEventProcessor() {
         try {
             eventProcessor.start();
-            es.awaitTermination(1000, TimeUnit.MILLISECONDS);
+            es.awaitTermination(10, TimeUnit.SECONDS);
             eventProcessor.stop();
         }
         catch (Exception e) {
@@ -50,8 +51,29 @@ public class EventBusStepDefs implements En {
         }
     }
 
+    private void setupReceiveEvent(Event e) {
+        BlockingQueue<Event> bq = new LinkedBlockingQueue<>();
+        bq.add(e);
+        when(mockedEventBusClient.getIncomingEventsQueue()).thenReturn(bq);
+    }
+
+    private Event getProducedEventOrFail(String eventType) {
+        ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+        verify(this.mockedEventBusClient, atLeastOnce()).sendEvent(eventCaptor.capture());
+
+        for (Event val : eventCaptor.getAllValues()) {
+            if (val.getType().equals(eventType)) {
+                return val;
+            }
+        }
+
+        fail("Event not produced...");
+        return null;
+    }
+
+    @SuppressWarnings("ConstantConditions")
     public EventBusStepDefs() {
-        When("a PendingTransaction event is received for moving £([\\d+.]+) from account (\\d+) to account (\\d+) with ID (\\w+)",
+        When("a[n]* PendingTransaction event is received for moving £([\\d+.]+) from account (\\d+) to account (\\d+) with ID (\\w+)",
                 (String amountStr, Integer fromAccountId, Integer toAccountId, String transactionId) -> {
                     BigDecimal amount = new BigDecimal(amountStr);
 
@@ -61,43 +83,38 @@ public class EventBusStepDefs implements En {
                     .set("ToAccountID", toAccountId)
                     .set("Amount", amount.toString())
             );
-
-            BlockingQueue<Event> bq = new LinkedBlockingQueue<>();
-            bq.add(event);
-            when(mockedEventBusClient.getIncomingEventsQueue()).thenReturn(bq);
-
+            setupReceiveEvent(event);
             runEventProcessor();
         });
 
-        Then("a (\\w+) event was created in response to PendingTransaction ID (\\w+)", (String eventType, String pendingTransactionId) -> {
-            ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-            verify(this.mockedEventBusClient, atLeastOnce()).sendEvent(eventCaptor.capture());
-
-            for (Event val : eventCaptor.getAllValues()) {
-                if (val.getType().equals(eventType)) {
-                    assertEquals(pendingTransactionId, val.getData().getString("TransactionID", ""));
-                    return;
-                }
-            }
-
-            fail("Event not produced...");
+        When("a[n]* AccountCreationRequest event is received with RequestID (\\w+)", (String requestId) -> {
+            Event event = new Event("AccountCreationRequest", Json.object().asObject()
+                    .set("RequestID", requestId)
+            );
+            setupReceiveEvent(event);
+            runEventProcessor();
         });
 
-        Then("a (\\w+) event was created for account (\\d+) with amount £([\\d.]+)", (String eventType, Integer accountId, String amountStr) -> {
+        Then("a[n]* (\\w+) event was created in response to PendingTransaction ID (\\w+)", (String eventType, String pendingTransactionId) -> {
+            Event producedEvent = getProducedEventOrFail(eventType);
+
+            assertEquals(pendingTransactionId, producedEvent.getData().getString("TransactionID", ""));
+        });
+
+        Then("a[n]* (\\w+) event was created for account (\\d+) with amount £([\\d.]+)", (String eventType, Integer accountId, String amountStr) -> {
             BigDecimal amount = new BigDecimal(amountStr);
 
-            ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-            verify(this.mockedEventBusClient, atLeastOnce()).sendEvent(eventCaptor.capture());
+            Event producedEvent = getProducedEventOrFail(eventType);
 
-            for (Event val : eventCaptor.getAllValues()) {
-                if (val.getType().equals(eventType)) {
-                    assertEquals(amount, new BigDecimal(val.getData().getString("Amount", "")));
-                    assertEquals(accountId.intValue(), val.getData().getInt("AccountID", -1));
-                    return;
-                }
-            }
+            assertEquals(amount, new BigDecimal(producedEvent.getData().getString("Amount", "")));
+            assertEquals(accountId.intValue(), producedEvent.getData().getInt("AccountID", -1));
+        });
 
-            fail("Event not produced...");
+        Then("a[n]* AccountCreated event was created in response to AccountCreationRequest RequestID (\\w+) that defines AccountID (\\d+)", (String requestId, Integer accountId) -> {
+            Event producedEvent = getProducedEventOrFail("AccountCreated");
+
+            assertEquals(requestId, producedEvent.getData().getString("RequestID", ""));
+            assertEquals(accountId.intValue(), producedEvent.getData().getInt("AccountID", -1));
         });
     }
 }

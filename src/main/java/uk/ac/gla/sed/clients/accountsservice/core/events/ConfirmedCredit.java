@@ -6,7 +6,7 @@ import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 import java.util.Date;
 
 public class ConfirmedCredit extends Event {
-    private AcceptedTransaction acceptedTransaction;
+    private final AcceptedTransaction acceptedTransaction;
 
     public ConfirmedCredit(AcceptedTransaction transaction) {
         super("ConfirmedCredit", Json.object().asObject());
@@ -16,5 +16,9 @@ public class ConfirmedCredit extends Event {
         this.data.set("AccountID", transaction.getTransaction().getToAccountId());
         this.data.set("Amount", transaction.getTransaction().getAmount().toString());
         this.data.set("Date", new Date().toString());
+    }
+
+    public AcceptedTransaction getAcceptedTransaction() {
+        return acceptedTransaction;
     }
 }

@@ -1,4 +1,4 @@
-Feature: Accounts Service
+Feature: Transaction Processing
     The Accounts Service is responsible for determining the balance of each account in the system.
     The Accounts Service is also responsible for validating PendingTransaction events
     and executing the necessary state changes for the transaction to occur.
@@ -37,5 +37,3 @@ Feature: Accounts Service
 #      And Alice has an invalid session token
 #      When Alice requests to view her balance
 #      Then the Accounts Service returns a 401 Unauthorized
-
-# TODO add (and decide on) scenarios for account creation

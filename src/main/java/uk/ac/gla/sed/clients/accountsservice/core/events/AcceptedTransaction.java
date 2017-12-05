@@ -5,7 +5,7 @@ import com.eclipsesource.json.Json;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 
 public class AcceptedTransaction extends Event {
-    private PendingTransaction transaction;
+    private final PendingTransaction transaction;
 
     public AcceptedTransaction(PendingTransaction transaction) {
         super("AcceptedTransaction", Json.object().asObject());

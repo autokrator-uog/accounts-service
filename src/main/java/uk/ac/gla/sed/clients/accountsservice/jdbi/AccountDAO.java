@@ -18,6 +18,9 @@ public interface AccountDAO {
     @SqlUpdate("INSERT INTO accounts (id) VALUES (:id);")
     void createAccount(@Bind("id") int accountId);
 
+    @SqlQuery("SELECT id FROM accounts ORDER BY id DESC LIMIT 1;")
+    Integer getHighestAccountId();
+
     @SqlQuery("SELECT balance FROM accounts WHERE id=:id;")
     BigDecimal getBalance(@Bind("id") int accountId);
 

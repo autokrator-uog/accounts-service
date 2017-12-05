@@ -9,10 +9,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AccountStepDefs implements En {
-    DbTestFixture db;
-    DBI dbi;
+    private DbTestFixture db;
+    private DBI dbi;
 
     @Before
     public void setUpdDBFixture() throws Throwable {
@@ -41,6 +42,14 @@ public class AccountStepDefs implements En {
             BigDecimal actualBalance = dao.getBalance(accountId).setScale(2, RoundingMode.HALF_UP);
 
             assertEquals(expectedBalance, actualBalance);
+        });
+
+        Then("there is now an account with accountId (\\d+)", (Integer accountId) -> {
+            final AccountDAO dao = dbi.onDemand(AccountDAO.class);
+            BigDecimal actualBalance = dao.getBalance(accountId);
+            if (actualBalance == null) {
+                fail("There is no account with accountId " + accountId);
+            }
         });
     }
 }

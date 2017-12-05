@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 public class PendingTransactionHandler {
     private static final Logger LOG = Logger.getLogger(PendingTransactionHandler.class.getName());
 
-    private AccountDAO dao;
-    private EventBusClient client;
+    private final AccountDAO dao;
+    private final EventBusClient client;
     public PendingTransactionHandler(AccountDAO dao, EventBusClient client) {
         this.dao = dao;
         this.client = client;
