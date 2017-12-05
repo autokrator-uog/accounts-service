@@ -27,7 +27,8 @@ test:
   script:
     - mvn -Deventbusclient.version=$EVENT_BUS_CLIENT_VERSION test
   artifacts:
-    - target/jacoco-ut/*
+    paths:
+      - target/jacoco-ut/*
 
 build:
   stage: build
