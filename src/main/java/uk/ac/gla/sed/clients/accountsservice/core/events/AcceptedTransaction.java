@@ -5,18 +5,16 @@ import com.eclipsesource.json.Json;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 
 public class AcceptedTransaction extends Event {
-    private String transactionId;
+    private final PendingTransaction transaction;
 
     public AcceptedTransaction(PendingTransaction transaction) {
-        this.transactionId = transaction.getTransactionId();
+        super("AcceptedTransaction", Json.object().asObject());
 
-        this.type = "AcceptedTransaction";
-
-        this.data = Json.object().asObject();
-        this.data.set("TransactionID", this.transactionId);
+        this.transaction = transaction;
+        this.data.set("TransactionID", transaction.getTransactionId());
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public PendingTransaction getTransaction() {
+        return transaction;
     }
 }

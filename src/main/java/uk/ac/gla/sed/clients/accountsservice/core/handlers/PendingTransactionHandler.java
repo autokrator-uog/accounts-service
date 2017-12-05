@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 public class PendingTransactionHandler {
     private static final Logger LOG = Logger.getLogger(PendingTransactionHandler.class.getName());
 
-    private AccountDAO dao;
-    private EventBusClient client;
+    private final AccountDAO dao;
+    private final EventBusClient client;
     public PendingTransactionHandler(AccountDAO dao, EventBusClient client) {
         this.dao = dao;
         this.client = client;
@@ -29,13 +29,20 @@ public class PendingTransactionHandler {
         client.sendEvent(event);
 
         LOG.fine(String.format("Accepted transaction %s", transaction.getTransactionId()));
+
+        ConfirmedCredit confirmedCredit = new ConfirmedCredit(event);
+        ConfirmedDebit confirmedDebit = new ConfirmedDebit(event);
+        client.sendEvent(confirmedCredit);
+        client.sendEvent(confirmedDebit);
+
+        LOG.fine(String.format("Account statements written for transaction %s", transaction.getTransactionId()));
     }
 
     public void processTransaction(PendingTransaction transaction) {
         LOG.fine(String.format("Processing transaction %s", transaction.getTransactionId()));
 
-        int fromAccountId = Integer.valueOf(transaction.getFromAccountId());
-        int toAccountId = Integer.valueOf(transaction.getToAccountId());
+        int fromAccountId = transaction.getFromAccountId();
+        int toAccountId = transaction.getToAccountId();
 
         BigDecimal balanceFromAccount = dao.getBalance(fromAccountId);
         if (balanceFromAccount == null) {

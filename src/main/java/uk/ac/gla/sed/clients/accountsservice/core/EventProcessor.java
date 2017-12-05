@@ -1,7 +1,9 @@
 package uk.ac.gla.sed.clients.accountsservice.core;
 
 import io.dropwizard.lifecycle.Managed;
+import uk.ac.gla.sed.clients.accountsservice.core.events.AccountCreationRequest;
 import uk.ac.gla.sed.clients.accountsservice.core.events.PendingTransaction;
+import uk.ac.gla.sed.clients.accountsservice.core.handlers.AccountCreationHandler;
 import uk.ac.gla.sed.clients.accountsservice.core.handlers.PendingTransactionHandler;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
@@ -12,11 +14,17 @@ import java.util.concurrent.ExecutorService;
 public class EventProcessor implements Managed {
     private final EventBusClient eventBusClient;
     private final PendingTransactionHandler pendingTransactionHandler;
+    private final AccountCreationHandler accountCreationHandler;
     private final ExecutorService workers;
 
     public EventProcessor(String eventBusURL, AccountDAO dao, ExecutorService es) {
-        this.eventBusClient = new EventBusClient(eventBusURL);
+        this(new EventBusClient(eventBusURL), dao, es);
+    }
+
+    public EventProcessor(EventBusClient eventBusClient, AccountDAO dao, ExecutorService es) {
+        this.eventBusClient = eventBusClient;
         this.pendingTransactionHandler = new PendingTransactionHandler(dao, this.eventBusClient);
+        this.accountCreationHandler = new AccountCreationHandler(dao, this.eventBusClient);
         this.workers = es;
     }
 
@@ -43,7 +51,9 @@ public class EventProcessor implements Managed {
                             PendingTransaction parsedEvent = new PendingTransaction(incomingEvent);
                             pendingTransactionHandler.processTransaction(parsedEvent);
                             break;
-                        case "AccountCreation":
+                        case "AccountCreationRequest":
+                            AccountCreationRequest request = new AccountCreationRequest(incomingEvent);
+                            accountCreationHandler.processAccountCreationRequest(request);
                             break;
                         default:
                             // ignore
@@ -56,5 +66,9 @@ public class EventProcessor implements Managed {
                 }
             }
         }
+    }
+
+    public EventBusClient getEventBusClient() {
+        return eventBusClient;
     }
 }

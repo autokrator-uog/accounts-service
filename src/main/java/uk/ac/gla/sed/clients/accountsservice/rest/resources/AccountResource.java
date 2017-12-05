@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Path("/account/{accountID}")
 @Produces(MediaType.APPLICATION_JSON)
 public class AccountResource {
-    private AccountDAO dao;
+    private final AccountDAO dao;
     public AccountResource(AccountDAO dao) {
         this.dao = dao;
     }
