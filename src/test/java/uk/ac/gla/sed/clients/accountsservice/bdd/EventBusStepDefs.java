@@ -92,7 +92,7 @@ public class EventBusStepDefs implements En {
             for (Event val : eventCaptor.getAllValues()) {
                 if (val.getType().equals(eventType)) {
                     assertEquals(amount, new BigDecimal(val.getData().getString("Amount", "")));
-                    assertEquals(accountId.intValue(), val.getData().getInt("Account", -1));
+                    assertEquals(accountId.intValue(), val.getData().getInt("AccountID", -1));
                     return;
                 }
             }

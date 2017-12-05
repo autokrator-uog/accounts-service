@@ -29,6 +29,13 @@ public class PendingTransactionHandler {
         client.sendEvent(event);
 
         LOG.fine(String.format("Accepted transaction %s", transaction.getTransactionId()));
+
+        ConfirmedCredit confirmedCredit = new ConfirmedCredit(event);
+        ConfirmedDebit confirmedDebit = new ConfirmedDebit(event);
+        client.sendEvent(confirmedCredit);
+        client.sendEvent(confirmedDebit);
+
+        LOG.fine(String.format("Account statements written for transaction %s", transaction.getTransactionId()));
     }
 
     public void processTransaction(PendingTransaction transaction) {
