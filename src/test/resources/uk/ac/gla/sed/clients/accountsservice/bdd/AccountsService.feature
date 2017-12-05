@@ -25,14 +25,17 @@ Feature: Accounts Service
       And accountId 1 now has a balance of £0 in it
       And a RejectedTransaction event was created in response to PendingTransaction ID 002
 
-    Scenario: A user wants to view their balance
-      Given accountId 0 has a balance of £50 in it
-      And Alice is logged in with a valid session token
-      When Alice requests to view her balance
-      Then the Accounts Service returns £50
+#  TO BE IMPLEMENTED...
+#    Scenario: A user wants to view their balance
+#      Given accountId 0 has a balance of £50 in it
+#      And Alice is logged in with a valid session token
+#      When Alice requests to view her balance
+#      Then the Accounts Service returns £50
+#
+#    Scenario: A user wants to view their balance, but has a bad session token.
+#      Given accountId 0 has a balance of £50 in it
+#      And Alice has an invalid session token
+#      When Alice requests to view her balance
+#      Then the Accounts Service returns a 401 Unauthorized
 
-    Scenario: A user wants to view their balance, but has a bad session token.
-      Given accountId 0 has a balance of £50 in it
-      And Alice has an invalid session token
-      When Alice requests to view her balance
-      Then the Accounts Service returns a 401 Unauthorized
+# TODO add (and decide on) scenarios for account creation
