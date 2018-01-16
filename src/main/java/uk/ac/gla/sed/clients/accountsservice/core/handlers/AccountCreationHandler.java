@@ -25,7 +25,7 @@ public class AccountCreationHandler {
         dao.createAccount(newAccountId);
 
         AccountCreated event = new AccountCreated(request, newAccountId);
-        client.sendEvent(event);
+        client.sendEvent(event, request);
         LOG.info("Creating account " + newAccountId);
     }
 }

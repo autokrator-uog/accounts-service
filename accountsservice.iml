@@ -83,9 +83,9 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-auth:1.2.2" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: uk.ac.gla.sed.shared:eventbusclient:1.0-SNAPSHOT">
+      <library name="Maven: uk.ac.gla.sed.shared:eventbusclient:1.0.194">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/include/eventbusclient-1.0-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/include/eventbusclient-1.0.194.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -59,7 +59,8 @@ public class EventBusStepDefs implements En {
 
     private Event getProducedEventOrFail(String eventType) {
         ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-        verify(this.mockedEventBusClient, atLeastOnce()).sendEvent(eventCaptor.capture());
+        ArgumentCaptor<Event> correlatedEventCaptor = ArgumentCaptor.forClass(Event.class);
+        verify(this.mockedEventBusClient, atLeastOnce()).sendEvent(eventCaptor.capture(), correlatedEventCaptor.capture());
 
         for (Event val : eventCaptor.getAllValues()) {
             if (val.getType().equals(eventType)) {
