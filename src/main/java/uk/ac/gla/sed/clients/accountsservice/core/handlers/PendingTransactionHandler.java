@@ -19,21 +19,21 @@ public class PendingTransactionHandler {
 
     private void rejectTransaction(PendingTransaction transaction, String reason) {
         RejectedTransaction event = new RejectedTransaction(transaction, reason);
-        client.sendEvent(event);
+        client.sendEvent(event, transaction);
 
         LOG.fine(String.format("Rejected transaction %s because: %s", transaction.getTransactionId(), reason));
     }
 
     private void acceptTransaction(PendingTransaction transaction) {
         AcceptedTransaction event = new AcceptedTransaction(transaction);
-        client.sendEvent(event);
+        client.sendEvent(event, transaction);
 
         LOG.fine(String.format("Accepted transaction %s", transaction.getTransactionId()));
 
         ConfirmedCredit confirmedCredit = new ConfirmedCredit(event);
         ConfirmedDebit confirmedDebit = new ConfirmedDebit(event);
-        client.sendEvent(confirmedCredit);
-        client.sendEvent(confirmedDebit);
+        client.sendEvent(confirmedCredit, transaction);
+        client.sendEvent(confirmedDebit, transaction);
 
         LOG.fine(String.format("Account statements written for transaction %s", transaction.getTransactionId()));
     }
