@@ -9,4 +9,5 @@ import org.junit.runner.RunWith;
         format = {"pretty", "html:target/cucumber"}
 )
 public class BddTestRunnerTest {
+    public static DbTestFixture db = new DbTestFixture();
 }

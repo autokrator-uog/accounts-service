@@ -28,6 +28,7 @@
         <junit.platform.version>5.0.2</junit.platform.version>
         <eventbusclient.version>1.0.194</eventbusclient.version>
         <cucumber.version>1.2.5</cucumber.version>
+        <jdbi.version>3.0.1</jdbi.version>
     </properties>
 
     <!-- allows us to control the version of Dropwizard in one place... -->
@@ -65,9 +66,15 @@
         </dependency>
 
         <!-- DATABASE -->
+        <!--<dependency>-->
+        <!--<groupId>org.jdbi</groupId>-->
+        <!--<artifactId>jdbi3-bom</artifactId>-->
+        <!--<version>${jdbi.version}</version>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-jdbi</artifactId>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi3-sqlobject</artifactId>
+            <version>${jdbi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
