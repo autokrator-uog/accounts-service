@@ -1,4 +1,4 @@
-eventBusURL: ws://127.0.0.1:8081
+eventBusURL: ws://eventbus:8081
 
 # Database settings.
 database:
@@ -12,7 +12,7 @@ database:
   password: accountsservice
 
   # the JDBC URL
-  url: jdbc:postgresql://127.0.0.1:5433/accountsservice
+  url: jdbc:postgresql://accountsservice_db:5432/accountsservice
 
 server:
   type: simple
@@ -20,7 +20,7 @@ server:
   adminContextPath: /admin
   connector:
     type: http
-    port: 8080
+    port: 5003
 
 # Logging settings.
 logging:

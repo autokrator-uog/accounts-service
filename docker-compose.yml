@@ -1,10 +1,10 @@
 version: '3'
 
 services:
-  db:
+  accountsservice_db:
     image: postgres
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: accountsservice
       POSTGRES_PASSWORD: accountsservice
