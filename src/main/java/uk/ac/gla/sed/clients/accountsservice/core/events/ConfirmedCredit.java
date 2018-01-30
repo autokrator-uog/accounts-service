@@ -1,6 +1,7 @@
 package uk.ac.gla.sed.clients.accountsservice.core.events;
 
 import com.eclipsesource.json.Json;
+import uk.ac.gla.sed.shared.eventbusclient.api.Consistency;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 
 import java.math.BigDecimal;
@@ -10,8 +11,8 @@ public class ConfirmedCredit extends Event {
     private Integer accountId;
     private BigDecimal amount;
 
-    public ConfirmedCredit(AcceptedTransaction transaction) {
-        super("ConfirmedCredit", Json.object().asObject());
+    public ConfirmedCredit(AcceptedTransaction transaction, Consistency consistency) {
+        super("ConfirmedCredit", Json.object().asObject(), consistency);
 
         this.accountId = transaction.getTransaction().getToAccountId();
         this.amount = transaction.getTransaction().getAmount();
