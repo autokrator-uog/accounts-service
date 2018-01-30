@@ -2,6 +2,7 @@ package uk.ac.gla.sed.clients.accountsservice.core.handlers;
 
 import uk.ac.gla.sed.clients.accountsservice.core.events.*;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
+import uk.ac.gla.sed.shared.eventbusclient.api.Consistency;
 import uk.ac.gla.sed.shared.eventbusclient.api.EventBusClient;
 
 import java.math.BigDecimal;
@@ -30,8 +31,8 @@ public class PendingTransactionHandler {
 
         LOG.fine(String.format("Accepted transaction %s", transaction.getTransactionId()));
 
-        ConfirmedCredit confirmedCredit = new ConfirmedCredit(event);
-        ConfirmedDebit confirmedDebit = new ConfirmedDebit(event);
+        ConfirmedCredit confirmedCredit = new ConfirmedCredit(event, new Consistency("placeholder", "*"));
+        ConfirmedDebit confirmedDebit = new ConfirmedDebit(event, new Consistency("placeholder", "*"));
         client.sendEvent(confirmedCredit, transaction);
         client.sendEvent(confirmedDebit, transaction);
 
