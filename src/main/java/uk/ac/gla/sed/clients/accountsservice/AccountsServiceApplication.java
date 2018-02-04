@@ -7,10 +7,12 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.skife.jdbi.v2.DBI;
 import uk.ac.gla.sed.clients.accountsservice.core.EventProcessor;
+import uk.ac.gla.sed.clients.accountsservice.core.ReceiptProcessor;
 import uk.ac.gla.sed.clients.accountsservice.health.EventBusHealthCheck;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.AccountResource;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.HelloResource;
+import uk.ac.gla.sed.shared.eventbusclient.api.EventBusClient;
 
 import java.math.BigDecimal;
 
@@ -41,6 +43,8 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
         // create dummy data
         dao.deleteTableIfExists();
         dao.createAccountTable();
+        dao.deleteConsistencyTableIfExists();
+        dao.createConsistencyTable();
         dao.createAccount(1);
         dao.createAccount(2);
         dao.createAccount(3);
@@ -58,7 +62,15 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
                 dao,
                 environment.lifecycle().executorService("eventproessor").build()
         );
+        EventBusClient eventBusClient = eventProcessor.getEventBusClient();
+        final ReceiptProcessor receiptProcessor = new ReceiptProcessor(
+                eventBusClient,
+                dao,
+                environment.lifecycle().executorService("receiptprocessor").build()
+        );
         environment.lifecycle().manage(eventProcessor);
+        environment.lifecycle().manage(receiptProcessor);
+
 
         /* HEALTH CHECKS */
         final EventBusHealthCheck eventBusHealthCheck = new EventBusHealthCheck(eventBusURL);
