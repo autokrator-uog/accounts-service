@@ -6,12 +6,14 @@ import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import uk.ac.gla.sed.clients.accountsservice.core.EventProcessor;
+import uk.ac.gla.sed.clients.accountsservice.core.ReceiptProcessor;
 import uk.ac.gla.sed.clients.accountsservice.health.EventBusHealthCheck;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.StatementDAO;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.AccountResource;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.HelloResource;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.StatementResource;
+import uk.ac.gla.sed.shared.eventbusclient.api.EventBusClient;
 
 import java.math.BigDecimal;
 
@@ -53,7 +55,15 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
                 statementDAO,
                 environment.lifecycle().executorService("eventproessor").build()
         );
+        EventBusClient eventBusClient = eventProcessor.getEventBusClient();
+        final ReceiptProcessor receiptProcessor = new ReceiptProcessor(
+                eventBusClient,
+                dao,
+                environment.lifecycle().executorService("receiptprocessor").build()
+        );
         environment.lifecycle().manage(eventProcessor);
+        environment.lifecycle().manage(receiptProcessor);
+
 
         /* HEALTH CHECKS */
         final EventBusHealthCheck eventBusHealthCheck = new EventBusHealthCheck(eventBusURL);

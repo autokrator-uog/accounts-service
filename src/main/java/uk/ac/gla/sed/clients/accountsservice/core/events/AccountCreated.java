@@ -9,7 +9,7 @@ public class AccountCreated extends Event {
     private final int accountId;
 
     public AccountCreated(AccountCreationRequest request, int accountId) {
-        super("AccountCreated", Json.object().asObject(), new Consistency("AC-" + request.getRequestId(), "*"));
+        super("AccountCreated", Json.object().asObject(), new Consistency("create-" + request.getRequestId(), "*"));
 
         this.request = request;
         this.data.set("RequestID", this.request.getRequestId());
