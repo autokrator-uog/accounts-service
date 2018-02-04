@@ -26,4 +26,30 @@ public class AccountResource {
         }
         return new Account(accountId, balance);
     }
+
+    @POST
+    @Timed
+    public Account withdrawBalance(@PathParam("accountID") int accountId, int withdraw) {
+        BigDecimal balance = dao.getBalance(accountId);
+        if (balance == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        else if (balance > withdraw){
+            System.err.println("Withdrawl amount is greater than the balance.");
+            //How should I be handling this situation?
+            //Create an error exception as is done in the if loop above?
+        }
+        return new Account(accountId, balance - withdraw);
+    }
+
+    @POST
+    @Timed
+    public Account depositBalance(@PathParam("accountID") int accountId, int deposit) {
+        BigDecimal balance = dao.getBalance(accountId);
+        if (balance == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        return new Account(accountId, balance + deposit);
+    }
+
 }
