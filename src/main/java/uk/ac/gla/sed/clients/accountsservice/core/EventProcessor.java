@@ -42,6 +42,8 @@ public class EventProcessor implements Managed {
         ArrayList<String> interestedEvents = new ArrayList<>();
         interestedEvents.add("PendingTransaction");
         interestedEvents.add("AccountCreationRequest");
+        interestedEvents.add("ConfirmedCredit");
+        interestedEvents.add("ConfirmedDebit");
         RegisterMessage registration = new RegisterMessage("accounts", interestedEvents);
         eventBusClient.register(registration);
         workers.submit(new ConsumeEventTask());

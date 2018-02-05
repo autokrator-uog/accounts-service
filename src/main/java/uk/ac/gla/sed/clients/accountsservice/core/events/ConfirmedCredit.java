@@ -23,7 +23,7 @@ public class ConfirmedCredit extends Event {
     }
 
     public ConfirmedCredit(Event e) {
-        super(e.getType(), Json.object().asObject().merge(e.getData()));
+        super(e.getType(), Json.object().asObject().merge(e.getData()), e.getConsistency());
 
         if (!type.equals("ConfirmedCredit")) {
             throw new IllegalArgumentException("Event must be a ConfirmedCredit...");

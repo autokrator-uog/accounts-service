@@ -12,10 +12,7 @@ import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.StatementDAO;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.AccountResource;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.HelloResource;
-<<<<<<< HEAD
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.StatementResource;
-=======
->>>>>>> 3a791250cf8366448a1a4b55c00b75645d5d8b2f
 import uk.ac.gla.sed.shared.eventbusclient.api.EventBusClient;
 
 import java.math.BigDecimal;
@@ -39,28 +36,17 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
         final StatementDAO statementDAO = handle.attach(StatementDAO.class);
 
         // create dummy data
-<<<<<<< HEAD
         statementDAO.deleteTableIfExists();
         accountDAO.deleteTableIfExists();
         accountDAO.createAccountTable();
+        accountDAO.deleteConsistencyTableIfExists();
+        accountDAO.createConsistencyTable();
         accountDAO.createAccount(1);
         accountDAO.createAccount(2);
         accountDAO.createAccount(3);
         accountDAO.updateBalance(1, new BigDecimal("5000.24"));
         accountDAO.updateBalance(2, new BigDecimal("30.245"));
         accountDAO.updateBalance(3, new BigDecimal("1000000000.25"));
-=======
-        dao.deleteTableIfExists();
-        dao.createAccountTable();
-        dao.deleteConsistencyTableIfExists();
-        dao.createConsistencyTable();
-        dao.createAccount(1);
-        dao.createAccount(2);
-        dao.createAccount(3);
-        dao.updateBalance(1, new BigDecimal("5000.24"));
-        dao.updateBalance(2, new BigDecimal("30.245"));
-        dao.updateBalance(3, new BigDecimal("1000000000.25"));
->>>>>>> 3a791250cf8366448a1a4b55c00b75645d5d8b2f
 
         statementDAO.createAccountStatementsTable();
 
@@ -74,7 +60,7 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
         EventBusClient eventBusClient = eventProcessor.getEventBusClient();
         final ReceiptProcessor receiptProcessor = new ReceiptProcessor(
                 eventBusClient,
-                dao,
+                accountDAO,
                 environment.lifecycle().executorService("receiptprocessor").build()
         );
         environment.lifecycle().manage(eventProcessor);
