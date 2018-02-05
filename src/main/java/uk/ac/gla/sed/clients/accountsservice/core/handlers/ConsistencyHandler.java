@@ -16,18 +16,21 @@ public class ConsistencyHandler {
     }
 
     public Consistency getConsistency(Event event) {
-        String accountID = event.getData().get("AccountID").toString();
+        if (event.getType().equals("ConfirmedCredit") || event.getType().equals("ConfirmedDebit")) {
+            String accountID = event.getData().get("AccountID").toString();
 
-        String consistencyKey = "acc-" + accountID;
-        Integer consistencyValue = dao.getConstistencyValue(consistencyKey);
+            String consistencyKey = "acc-" + accountID;
+            Integer consistencyValue = dao.getConstistencyValue(consistencyKey);
 
-        if (consistencyValue == null) {
-            consistencyValue = 0;
-            dao.createConsistencyEntry(consistencyKey);
+            if (consistencyValue == null) {
+                consistencyValue = 0;
+                dao.createConsistencyEntry(consistencyKey);
+            }
+            dao.incrementConsistencyValue(consistencyKey);
+
+
+            return new Consistency(consistencyKey, String.valueOf(consistencyValue));
         }
-        dao.incrementConsistencyValue(consistencyKey);
-
-
-        return new Consistency(consistencyKey, String.valueOf(consistencyValue));
+        return new Consistency(event.getConsistency().getKey(), "*");
     }
 }
