@@ -43,13 +43,13 @@ public class ReceiptProcessor implements Managed {
                     ReturningEvent returnedEvent = eventBusClient.getReturningQueue().take();
                     switch (returnedEvent.getStatus()) {
                         case SUCCESS:
-                            LOG.info("We made it to success!");// We may need to do things on a successful returned event.
+                            // We may need to do things on a successful returned event.
                             break;
                         case INCONSISTENT:
                             Event inconsistentEvent = returnedEvent.getEvent();
                             inconsistentEvent.setConsistency(consistencyHandler.getConsistency(inconsistentEvent));
                             eventBusClient.sendEvent(inconsistentEvent, null);
-                            LOG.info("We made it to inconsistent");
+                            LOG.info(String.format("Inconsistent Event for sequence key: %s",inconsistentEvent.getConsistency().getKey()));
                             break;
                         default:
                             LOG.info("Returning event had an invalid status. How did this happen?");
