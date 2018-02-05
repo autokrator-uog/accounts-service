@@ -1,12 +1,11 @@
 package uk.ac.gla.sed.clients.accountsservice.bdd;
 
 import com.eclipsesource.json.Json;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java8.En;
 import org.mockito.ArgumentCaptor;
-import org.skife.jdbi.v2.DBI;
 import uk.ac.gla.sed.clients.accountsservice.core.EventProcessor;
-import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 import uk.ac.gla.sed.shared.eventbusclient.api.EventBusClient;
 
@@ -23,53 +22,7 @@ public class EventBusStepDefs implements En {
     private EventProcessor eventProcessor;
 
     private DbTestFixture dbTestFixture;
-    private DBI dbi;
-    private AccountDAO dao;
     private EventBusClient mockedEventBusClient;
-
-    @Before
-    public void setUp() throws Throwable {
-        es = Executors.newSingleThreadExecutor();
-
-        dbTestFixture = new DbTestFixture();
-        dbTestFixture.before();
-        dbi = dbTestFixture.getDbi();
-        dao = dbi.onDemand(AccountDAO.class);
-
-        mockedEventBusClient = mock(EventBusClient.class);
-        eventProcessor = new EventProcessor(mockedEventBusClient, dao, es);
-    }
-
-    private void runEventProcessor() {
-        try {
-            eventProcessor.start();
-            es.awaitTermination(10, TimeUnit.SECONDS);
-            eventProcessor.stop();
-        }
-        catch (Exception e) {
-            fail(e);
-        }
-    }
-
-    private void setupReceiveEvent(Event e) {
-        BlockingQueue<Event> bq = new LinkedBlockingQueue<>();
-        bq.add(e);
-        when(mockedEventBusClient.getIncomingEventsQueue()).thenReturn(bq);
-    }
-
-    private Event getProducedEventOrFail(String eventType) {
-        ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
-        verify(this.mockedEventBusClient, atLeastOnce()).sendEvent(eventCaptor.capture(), anyObject());
-
-        for (Event val : eventCaptor.getAllValues()) {
-            if (val.getType().equals(eventType)) {
-                return val;
-            }
-        }
-
-        fail("Event not produced...");
-        return null;
-    }
 
     @SuppressWarnings("ConstantConditions")
     public EventBusStepDefs() {
@@ -95,6 +48,18 @@ public class EventBusStepDefs implements En {
             runEventProcessor();
         });
 
+        When("a[n]* (ConfirmedCredit|ConfirmedDebit) event is received for accountId (\\d+) with amount £([\\d+.]+)",
+                (String type, Integer accountId, String amountStr) -> {
+                    BigDecimal amount = new BigDecimal(amountStr);
+
+                    Event event = new Event(type, Json.object().asObject()
+                            .set("AccountID", accountId)
+                            .set("Amount", amount.toString())
+                    );
+                    setupReceiveEvent(event);
+                    runEventProcessor();
+                });
+
         Then("a[n]* (\\w+) event was created in response to PendingTransaction ID (\\w+)", (String eventType, String pendingTransactionId) -> {
             Event producedEvent = getProducedEventOrFail(eventType);
 
@@ -116,5 +81,51 @@ public class EventBusStepDefs implements En {
             assertEquals(requestId, producedEvent.getData().getString("RequestID", ""));
             assertEquals(accountId.intValue(), producedEvent.getData().getInt("AccountID", -1));
         });
+    }
+
+    @Before
+    public void setUp() {
+        es = Executors.newSingleThreadExecutor();
+
+        dbTestFixture = BddTestRunnerTest.db;
+        dbTestFixture.before();
+        mockedEventBusClient = mock(EventBusClient.class);
+
+        eventProcessor = new EventProcessor(mockedEventBusClient, dbTestFixture.getAccountDAO(), dbTestFixture.getStatementDAO(), es);
+    }
+
+    private void runEventProcessor() {
+        try {
+            eventProcessor.start();
+            es.awaitTermination(10, TimeUnit.SECONDS);
+            eventProcessor.stop();
+        } catch (Exception e) {
+            fail(e);
+        }
+    }
+
+    private void setupReceiveEvent(Event e) {
+        BlockingQueue<Event> bq = new LinkedBlockingQueue<>();
+        bq.add(e);
+        when(mockedEventBusClient.getIncomingEventsQueue()).thenReturn(bq);
+    }
+
+    private Event getProducedEventOrFail(String eventType) {
+        ArgumentCaptor<Event> eventCaptor = ArgumentCaptor.forClass(Event.class);
+        verify(this.mockedEventBusClient, atLeastOnce()).sendEvent(eventCaptor.capture(), anyObject());
+
+        for (Event val : eventCaptor.getAllValues()) {
+            if (val.getType().equals(eventType)) {
+                return val;
+            }
+        }
+
+        fail("Event not produced...");
+        return null;
+    }
+
+    @After
+    public void after() {
+        dbTestFixture.after();
     }
 }
