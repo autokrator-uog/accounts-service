@@ -31,14 +31,17 @@ public class AccountResource {
     @Timed
     public Account withdrawBalance(@PathParam("accountID") int accountId, int withdraw) {
         BigDecimal balance = dao.getBalance(accountId);
-        if (balance == null) {
+
+	BigDecimal decimalWithdraw = new BigDecimal(withdraw.toString());
+
+	if (balance.compareTo(withdraw) < 0){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+
+        else if (balance == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
-        else if (balance > withdraw){
-            System.err.println("Withdrawl amount is greater than the balance.");
-            //How should I be handling this situation?
-            //Create an error exception as is done in the if loop above?
-        }
+        
         return new Account(accountId, balance - withdraw);
     }
 
