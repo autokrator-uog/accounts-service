@@ -3,13 +3,14 @@ package uk.ac.gla.sed.clients.accountsservice.core.events;
 import com.eclipsesource.json.Json;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ConfirmedCredit extends Event {
     private final AcceptedTransaction acceptedTransaction;
 
     public ConfirmedCredit(AcceptedTransaction transaction) {
-        super("ConfirmedCredit", Json.object().asObject());
+        super("ConfirmedCredit", Json.object().asObject(), null);
 
         this.acceptedTransaction = transaction;
 
@@ -20,5 +21,11 @@ public class ConfirmedCredit extends Event {
 
     public AcceptedTransaction getAcceptedTransaction() {
         return acceptedTransaction;
+    }
+    
+    public ConfirmedCredit(int accountID, BigDecimal amount, String date) {
+    	super("ConfirmedCredit", Json.object().asObject(), null);
+    	
+    	this.acceptedTransaction = null;
     }
 }
