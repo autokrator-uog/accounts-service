@@ -7,7 +7,7 @@ public class AccountCreationRequest extends Event {
     private String requestId;
 
     public AccountCreationRequest(Event e) {
-        super(e.getType(), Json.object().asObject().merge(e.getData()));
+        super(e.getType(), Json.object().asObject().merge(e.getData()), null);
 
         if (!type.equals("AccountCreationRequest")) {
             throw new IllegalArgumentException("Event must be a PendingTransaction...");

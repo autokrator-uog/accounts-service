@@ -27,5 +27,9 @@ public class ConfirmedCredit extends Event {
     	super("ConfirmedCredit", Json.object().asObject(), null);
     	
     	this.acceptedTransaction = null;
+    	
+    	this.data.set("AccountID", accountID);
+        this.data.set("Amount", amount.toBigInteger().intValueExact());
+        this.data.set("Date", date);
     }
 }

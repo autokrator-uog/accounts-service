@@ -8,7 +8,7 @@ public class AcceptedTransaction extends Event {
     private final PendingTransaction transaction;
 
     public AcceptedTransaction(PendingTransaction transaction) {
-        super("AcceptedTransaction", Json.object().asObject());
+        super("AcceptedTransaction", Json.object().asObject(), null);
 
         this.transaction = transaction;
         this.data.set("TransactionID", transaction.getTransactionId());

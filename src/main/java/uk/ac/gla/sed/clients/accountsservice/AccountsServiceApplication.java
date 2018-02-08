@@ -11,6 +11,7 @@ import uk.ac.gla.sed.clients.accountsservice.health.EventBusHealthCheck;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.AccountResource;
 import uk.ac.gla.sed.clients.accountsservice.rest.resources.HelloResource;
+import uk.ac.gla.sed.shared.eventbusclient.api.EventBusClient;
 
 import java.math.BigDecimal;
 
@@ -37,6 +38,7 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
         final DBI jdbi = factory.build(environment, config.getDataSourceFactory(), "postgresql");
 
         final AccountDAO dao = jdbi.onDemand(AccountDAO.class);
+        final EventBusClient eventBus = jdbi.onDemand(EventBusClient.class);
 
         // create dummy data
         dao.deleteTableIfExists();
@@ -67,7 +69,7 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
 
         /* RESOURCES */
         environment.jersey().register(new HelloResource());
-        environment.jersey().register(new AccountResource(dao));
+        environment.jersey().register(new AccountResource(dao, eventBus));
     }
 
     public static void main(String[] args) throws Exception {

@@ -45,12 +45,12 @@ public class AccountResource {
 
 		BigDecimal decimalWithdraw = new BigDecimal(withdraw);
 
-		if (balance.compareTo(decimalWithdraw) < 0) {
-			throw new WebApplicationException(Response.Status.BAD_REQUEST);
-		}
-
-		else if (balance == null) {
+		if (balance == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		
+		else if (balance.compareTo(decimalWithdraw) < 0) {
+			throw new WebApplicationException(Response.Status.BAD_REQUEST);
 		}
 
 		BigDecimal outBalance = balance.subtract(decimalWithdraw, new MathContext(2));

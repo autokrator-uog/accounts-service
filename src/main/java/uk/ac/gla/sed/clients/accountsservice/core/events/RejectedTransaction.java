@@ -8,7 +8,7 @@ public class RejectedTransaction extends Event {
     private final String reason;
 
     public RejectedTransaction(PendingTransaction transaction, String reason) {
-        super("RejectedTransaction", Json.object().asObject());
+        super("RejectedTransaction", Json.object().asObject(), null);
 
         this.transactionId = transaction.getTransactionId();
         this.data.set("TransactionID", this.transactionId);
