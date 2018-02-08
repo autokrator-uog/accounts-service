@@ -29,7 +29,7 @@ public class ConfirmedCredit extends Event {
     	this.acceptedTransaction = null;
     	
     	this.data.set("AccountID", accountID);
-        this.data.set("Amount", amount.toBigInteger().intValueExact());
+        this.data.set("Amount", amount.toString());
         this.data.set("Date", date);
     }
 }

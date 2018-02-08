@@ -17,10 +17,6 @@ public class EventProcessor implements Managed {
     private final AccountCreationHandler accountCreationHandler;
     private final ExecutorService workers;
 
-    public EventProcessor(String eventBusURL, AccountDAO dao, ExecutorService es) {
-        this(new EventBusClient(eventBusURL), dao, es);
-    }
-
     public EventProcessor(EventBusClient eventBusClient, AccountDAO dao, ExecutorService es) {
         this.eventBusClient = eventBusClient;
         this.pendingTransactionHandler = new PendingTransactionHandler(dao, this.eventBusClient);

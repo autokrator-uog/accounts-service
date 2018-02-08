@@ -81,7 +81,8 @@ public class EventBusStepDefs implements En {
                     .set("TransactionID", transactionId)
                     .set("FromAccountID", fromAccountId)
                     .set("ToAccountID", toAccountId)
-                    .set("Amount", amount.toString()), null
+                    .set("Amount", amount.toString()), 
+                    null	//null handles the correlated event.
             );
             setupReceiveEvent(event);
             runEventProcessor();
@@ -89,7 +90,8 @@ public class EventBusStepDefs implements En {
 
         When("a[n]* AccountCreationRequest event is received with RequestID (\\w+)", (String requestId) -> {
             Event event = new Event("AccountCreationRequest", Json.object().asObject()
-                    .set("RequestID", requestId), null
+                    .set("RequestID", requestId), 
+                    null	//null handles the correlated event.
             );
             setupReceiveEvent(event);
             runEventProcessor();

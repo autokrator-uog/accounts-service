@@ -38,7 +38,7 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
         final DBI jdbi = factory.build(environment, config.getDataSourceFactory(), "postgresql");
 
         final AccountDAO dao = jdbi.onDemand(AccountDAO.class);
-        final EventBusClient eventBus = jdbi.onDemand(EventBusClient.class);
+        final EventBusClient eventBus = new EventBusClient(eventBusURL);
 
         // create dummy data
         dao.deleteTableIfExists();
@@ -56,7 +56,7 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
 
         /* MANAGED LIFECYCLES */
         final EventProcessor eventProcessor = new EventProcessor(
-                eventBusURL,
+                eventBus,
                 dao,
                 environment.lifecycle().executorService("eventproessor").build()
         );
