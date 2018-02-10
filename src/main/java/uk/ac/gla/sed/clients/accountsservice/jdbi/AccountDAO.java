@@ -1,11 +1,10 @@
 package uk.ac.gla.sed.clients.accountsservice.jdbi;
 
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.math.BigDecimal;
-
 
 public interface AccountDAO {
     @SqlUpdate("CREATE TABLE accounts (id int PRIMARY KEY, balance NUMERIC(15,2) DEFAULT 0.00 NOT NULL);")

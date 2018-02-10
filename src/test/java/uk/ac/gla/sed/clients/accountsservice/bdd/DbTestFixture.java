@@ -3,41 +3,52 @@ package uk.ac.gla.sed.clients.accountsservice.bdd;
 import com.codahale.metrics.MetricRegistry;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jackson.Jackson;
-import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Environment;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.junit.rules.ExternalResource;
-import org.skife.jdbi.v2.DBI;
-import org.skife.jdbi.v2.Handle;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
+import uk.ac.gla.sed.clients.accountsservice.jdbi.StatementDAO;
 
 class DbTestFixture extends ExternalResource {
-    private DBI dbi;
+    private static final String JDBC_URI = "jdbc:postgresql://postgres:5432/accountsservice";
+
+    private Jdbi dbi;
     private Handle handle;
 
-    public DbTestFixture() {}
+    private AccountDAO accountDAO;
+    private StatementDAO statementDAO;
+
+    public DbTestFixture() {
+        Environment environment = new Environment("test-env", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
+
+
+        dbi = Jdbi.create(getDataSourceFactory().build(environment.metrics(), null));
+        dbi.installPlugin(new SqlObjectPlugin());
+
+        handle = dbi.open();
+        accountDAO = handle.attach(AccountDAO.class);
+        statementDAO = handle.attach(StatementDAO.class);
+    }
 
     @Override
-    protected void before() throws Throwable {
-        Environment environment = new Environment("test-env", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
-        dbi = new DBIFactory().build(environment, getDataSourceFactory(), "test");
-        handle = dbi.open();
+    protected void before() {
         migrateDatabase();
     }
 
     private void migrateDatabase() {
-        final AccountDAO dao = dbi.onDemand(AccountDAO.class);
-
         // create table structures
-        dao.deleteTableIfExists();
-        dao.createAccountTable();
+        statementDAO.deleteTableIfExists();
+        accountDAO.deleteTableIfExists();
+
+        accountDAO.createAccountTable();
+        statementDAO.createAccountStatementsTable();
     }
 
     @Override
     protected void after() {
-        final AccountDAO dao = dbi.onDemand(AccountDAO.class);
-        dao.deleteTableIfExists();
-
-        handle.close();
+//        handle.close();
     }
 
     private DataSourceFactory getDataSourceFactory() {
@@ -51,15 +62,22 @@ class DbTestFixture extends ExternalResource {
 
         // POSTGRES LIVE DB
         dataSourceFactory.setDriverClass("org.postgresql.Driver");
-        dataSourceFactory.setUrl("jdbc:postgresql://postgres:5432/accountsservice");
+        dataSourceFactory.setUrl(JDBC_URI);
         dataSourceFactory.setUser("accountsservice");
         dataSourceFactory.setPassword("accountsservice");
 
         return dataSourceFactory;
     }
 
-    public DBI getDbi() {
+    public Jdbi getDbi() {
         return dbi;
     }
 
+    public AccountDAO getAccountDAO() {
+        return accountDAO;
+    }
+
+    public StatementDAO getStatementDAO() {
+        return statementDAO;
+    }
 }
