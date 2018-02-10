@@ -58,7 +58,7 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
         EventBusClient eventBusClient = eventProcessor.getEventBusClient();
         final ReceiptProcessor receiptProcessor = new ReceiptProcessor(
                 eventBusClient,
-                dao,
+                accountDAO,
                 environment.lifecycle().executorService("receiptprocessor").build()
         );
         environment.lifecycle().manage(eventProcessor);

@@ -23,7 +23,7 @@ public class ConfirmedDebit extends Event {
     }
 
     public ConfirmedDebit(Event e) {
-        super(e.getType(), Json.object().asObject().merge(e.getData()));
+        super(e.getType(), Json.object().asObject().merge(e.getData()), e.getConsistency());
 
         if (!type.equals("ConfirmedDebit")) {
             throw new IllegalArgumentException("Event must be a ConfirmedDebit...");
