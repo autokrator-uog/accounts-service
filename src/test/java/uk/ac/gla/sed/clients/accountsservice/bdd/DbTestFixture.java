@@ -12,7 +12,7 @@ import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.StatementDAO;
 
 class DbTestFixture extends ExternalResource {
-    private static final String JDBC_URI = "jdbc:postgresql://postgres:5433/accountsservice";
+    private static final String JDBC_URI = "jdbc:postgresql://postgres:5432/accountsservice"; // change for local dev
 
     private Jdbi dbi;
     private Handle handle;
