@@ -39,6 +39,8 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
         statementDAO.deleteTableIfExists();
         accountDAO.deleteTableIfExists();
         accountDAO.createAccountTable();
+        accountDAO.deleteConsistencyTableIfExists();
+        accountDAO.createConsistencyTable();
         accountDAO.createAccount(1);
         accountDAO.createAccount(2);
         accountDAO.createAccount(3);
