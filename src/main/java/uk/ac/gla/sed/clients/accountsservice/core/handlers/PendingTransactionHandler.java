@@ -12,9 +12,12 @@ public class PendingTransactionHandler {
 
     private final AccountDAO dao;
     private final EventBusClient client;
+    private final ConsistencyHandler consistencyHandler;
+
     public PendingTransactionHandler(AccountDAO dao, EventBusClient client) {
         this.dao = dao;
         this.client = client;
+        this.consistencyHandler = new ConsistencyHandler(dao);
     }
 
     private void rejectTransaction(PendingTransaction transaction, String reason) {
@@ -30,8 +33,10 @@ public class PendingTransactionHandler {
 
         LOG.fine(String.format("Accepted transaction %s", transaction.getTransactionId()));
 
-        ConfirmedCredit confirmedCredit = new ConfirmedCredit(event);
-        ConfirmedDebit confirmedDebit = new ConfirmedDebit(event);
+        ConfirmedCredit confirmedCredit = new ConfirmedCredit(event, null);
+        ConfirmedDebit confirmedDebit = new ConfirmedDebit(event, null);
+        confirmedCredit.setConsistency(consistencyHandler.getConsistency(confirmedCredit));
+        confirmedDebit.setConsistency(consistencyHandler.getConsistency(confirmedDebit));
         client.sendEvent(confirmedCredit, transaction);
         client.sendEvent(confirmedDebit, transaction);
 

@@ -12,7 +12,11 @@ public class PendingTransaction extends Event {
     private BigDecimal amount;
 
     public PendingTransaction(Event e) throws IllegalArgumentException {
+<<<<<<< HEAD
         super(e.getType(), Json.object().asObject().merge(e.getData()), null);
+=======
+        super(e.getType(), Json.object().asObject().merge(e.getData()), e.getConsistency());
+>>>>>>> master
 
         if (!type.equals("PendingTransaction")) {
             throw new IllegalArgumentException("Event must be a PendingTransaction...");
