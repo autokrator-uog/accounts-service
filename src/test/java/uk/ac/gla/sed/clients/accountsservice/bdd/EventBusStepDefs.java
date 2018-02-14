@@ -6,6 +6,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java8.En;
 import org.mockito.ArgumentCaptor;
 import uk.ac.gla.sed.clients.accountsservice.core.EventProcessor;
+import uk.ac.gla.sed.shared.eventbusclient.api.Consistency;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 import uk.ac.gla.sed.shared.eventbusclient.api.EventBusClient;
 
@@ -34,7 +35,8 @@ public class EventBusStepDefs implements En {
                     .set("TransactionID", transactionId)
                     .set("FromAccountID", fromAccountId)
                     .set("ToAccountID", toAccountId)
-                    .set("Amount", amount.toString())
+                    .set("Amount", amount.toString()),
+                    new Consistency("test", "*")
             );
             setupReceiveEvent(event);
             runEventProcessor();
@@ -42,7 +44,8 @@ public class EventBusStepDefs implements En {
 
         When("a[n]* AccountCreationRequest event is received with RequestID (\\w+)", (String requestId) -> {
             Event event = new Event("AccountCreationRequest", Json.object().asObject()
-                    .set("RequestID", requestId)
+                    .set("RequestID", requestId),
+                    new Consistency("test", "*")
             );
             setupReceiveEvent(event);
             runEventProcessor();
@@ -54,7 +57,8 @@ public class EventBusStepDefs implements En {
 
                     Event event = new Event(type, Json.object().asObject()
                             .set("AccountID", accountId)
-                            .set("Amount", amount.toString())
+                            .set("Amount", amount.toString()),
+                            new Consistency("test", "*")
                     );
                     setupReceiveEvent(event);
                     runEventProcessor();

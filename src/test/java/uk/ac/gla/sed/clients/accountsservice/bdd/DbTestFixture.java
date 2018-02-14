@@ -12,7 +12,7 @@ import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.StatementDAO;
 
 class DbTestFixture extends ExternalResource {
-    private static final String JDBC_URI = "jdbc:postgresql://postgres:5432/accountsservice";
+    private static final String JDBC_URI = "jdbc:postgresql://postgres:5432/accountsservice"; // change for local dev
 
     private Jdbi dbi;
     private Handle handle;
@@ -20,7 +20,7 @@ class DbTestFixture extends ExternalResource {
     private AccountDAO accountDAO;
     private StatementDAO statementDAO;
 
-    public DbTestFixture() {
+    DbTestFixture() {
         Environment environment = new Environment("test-env", Jackson.newObjectMapper(), null, new MetricRegistry(), null);
 
 
@@ -41,9 +41,11 @@ class DbTestFixture extends ExternalResource {
         // create table structures
         statementDAO.deleteTableIfExists();
         accountDAO.deleteTableIfExists();
+        accountDAO.deleteConsistencyTableIfExists();
 
         accountDAO.createAccountTable();
         statementDAO.createAccountStatementsTable();
+        accountDAO.createConsistencyTable();
     }
 
     @Override

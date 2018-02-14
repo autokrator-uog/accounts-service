@@ -12,7 +12,9 @@ import uk.ac.gla.sed.clients.accountsservice.jdbi.AccountDAO;
 import uk.ac.gla.sed.clients.accountsservice.jdbi.StatementDAO;
 import uk.ac.gla.sed.shared.eventbusclient.api.Event;
 import uk.ac.gla.sed.shared.eventbusclient.api.EventBusClient;
+import uk.ac.gla.sed.shared.eventbusclient.internal.messages.RegisterMessage;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 
 public class EventProcessor implements Managed {
@@ -37,6 +39,13 @@ public class EventProcessor implements Managed {
     @Override
     public void start() {
         this.eventBusClient.start();
+        ArrayList<String> interestedEvents = new ArrayList<>();
+        interestedEvents.add("PendingTransaction");
+        interestedEvents.add("AccountCreationRequest");
+        interestedEvents.add("ConfirmedCredit");
+        interestedEvents.add("ConfirmedDebit");
+        RegisterMessage registration = new RegisterMessage("accounts", interestedEvents);
+        eventBusClient.register(registration);
         workers.submit(new ConsumeEventTask());
     }
 

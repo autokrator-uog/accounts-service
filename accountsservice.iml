@@ -12,6 +12,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="original-eventbusclient-1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-sqlobject:3.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-core:3.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.antlr:antlr-runtime:3.4" level="project" />
+    <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2.1" level="project" />
+    <orderEntry type="library" name="Maven: net.jodah:expiringmap:0.5.6" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-core:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-util:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
@@ -83,9 +88,9 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty.toolchain.setuid:jetty-setuid-java:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: io.dropwizard:dropwizard-auth:1.2.2" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: uk.ac.gla.sed.shared:eventbusclient:1.0.194">
+      <library name="Maven: uk.ac.gla.sed.shared:eventbusclient:1.0-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/include/eventbusclient-1.0.194.jar!/" />
+          <root url="jar://$MODULE_DIR$/include/eventbusclient-1.0-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
