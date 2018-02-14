@@ -50,8 +50,7 @@ public class ConfirmedDebit extends Event {
     
     public ConfirmedDebit(int accountID, BigDecimal amount, String date) {
     	super("ConfirmedDebit", Json.object().asObject(), null);
-    	
-    	this.acceptedTransaction = null;
+
     	
     	this.data.set("AccountID", accountID);
         this.data.set("Amount", amount.toString());

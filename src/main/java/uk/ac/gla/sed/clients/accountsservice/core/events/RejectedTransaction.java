@@ -9,11 +9,8 @@ public class RejectedTransaction extends Event {
     private final String reason;
 
     public RejectedTransaction(PendingTransaction transaction, String reason) {
-<<<<<<< HEAD
-        super("RejectedTransaction", Json.object().asObject(), null);
-=======
+
         super("RejectedTransaction", Json.object().asObject(), new Consistency("TXR-" + transaction.getConsistency().getKey().substring(3), "*"));
->>>>>>> master
 
         this.transactionId = transaction.getTransactionId();
         this.data.set("TransactionID", this.transactionId);

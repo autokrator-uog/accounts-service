@@ -11,13 +11,8 @@ public class ConfirmedCredit extends Event {
     private Integer accountId;
     private BigDecimal amount;
 
-<<<<<<< HEAD
-    public ConfirmedCredit(AcceptedTransaction transaction) {
-        super("ConfirmedCredit", Json.object().asObject(), null);
-=======
     public ConfirmedCredit(AcceptedTransaction transaction, Consistency consistency) {
         super("ConfirmedCredit", Json.object().asObject(), consistency);
->>>>>>> master
 
         this.accountId = transaction.getTransaction().getToAccountId();
         this.amount = transaction.getTransaction().getAmount();
@@ -55,8 +50,7 @@ public class ConfirmedCredit extends Event {
     
     public ConfirmedCredit(int accountID, BigDecimal amount, String date) {
     	super("ConfirmedCredit", Json.object().asObject(), null);
-    	
-    	this.acceptedTransaction = null;
+
     	
     	this.data.set("AccountID", accountID);
         this.data.set("Amount", amount.toString());

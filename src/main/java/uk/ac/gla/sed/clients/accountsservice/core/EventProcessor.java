@@ -24,15 +24,11 @@ public class EventProcessor implements Managed {
     private final ConfirmedStatementEventHandler confirmedStatementEventHandler;
     private final ExecutorService workers;
 
-<<<<<<< HEAD
-    public EventProcessor(EventBusClient eventBusClient, AccountDAO dao, ExecutorService es) {
-=======
     public EventProcessor(String eventBusURL, AccountDAO accountDAO, StatementDAO statementDAO, ExecutorService es) {
         this(new EventBusClient(eventBusURL), accountDAO, statementDAO, es);
     }
 
     public EventProcessor(EventBusClient eventBusClient, AccountDAO accountDAO, StatementDAO statementDAO, ExecutorService es) {
->>>>>>> master
         this.eventBusClient = eventBusClient;
         this.pendingTransactionHandler = new PendingTransactionHandler(accountDAO, this.eventBusClient);
         this.accountCreationHandler = new AccountCreationHandler(accountDAO, this.eventBusClient);

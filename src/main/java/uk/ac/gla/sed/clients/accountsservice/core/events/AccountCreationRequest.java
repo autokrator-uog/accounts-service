@@ -8,12 +8,8 @@ public class AccountCreationRequest extends Event {
     private String requestId;
 
     public AccountCreationRequest(Event e) {
-<<<<<<< HEAD
-        super(e.getType(), Json.object().asObject().merge(e.getData()), null);
-=======
         super(e.getType(), Json.object().asObject().merge(e.getData()),
                 new Consistency("createreq-" + e.getData().getString("RequestID", "") , "*"));
->>>>>>> master
 
         if (!type.equals("AccountCreationRequest")) {
             throw new IllegalArgumentException("Event must be a PendingTransaction...");

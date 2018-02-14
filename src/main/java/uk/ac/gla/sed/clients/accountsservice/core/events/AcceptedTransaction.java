@@ -9,12 +9,8 @@ public class AcceptedTransaction extends Event {
     private final PendingTransaction transaction;
 
     public AcceptedTransaction(PendingTransaction transaction) {
-<<<<<<< HEAD
-        super("AcceptedTransaction", Json.object().asObject(), null);
-=======
         super("AcceptedTransaction", Json.object().asObject(),
                 new Consistency("TXA-" + transaction.getConsistency().getKey().substring(3), "*"));
->>>>>>> master
 
         this.transaction = transaction;
         this.data.set("TransactionID", transaction.getTransactionId());
