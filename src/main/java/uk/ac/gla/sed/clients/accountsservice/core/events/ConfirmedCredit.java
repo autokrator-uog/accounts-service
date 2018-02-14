@@ -47,4 +47,13 @@ public class ConfirmedCredit extends Event {
     public BigDecimal getAmount() {
         return amount;
     }
+    
+    public ConfirmedCredit(int accountID, BigDecimal amount, String date) {
+    	super("ConfirmedCredit", Json.object().asObject(), null);
+
+    	
+    	this.data.set("AccountID", accountID);
+        this.data.set("Amount", amount.toString());
+        this.data.set("Date", date);
+    }
 }

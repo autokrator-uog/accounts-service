@@ -74,7 +74,7 @@ public class AccountsServiceApplication extends Application<AccountsServiceConfi
 
         /* RESOURCES */
         environment.jersey().register(new HelloResource());
-        environment.jersey().register(new AccountResource(accountDAO));
+        environment.jersey().register(new AccountResource(accountDAO, eventBusClient));
         environment.jersey().register(new StatementResource(statementDAO));
     }
 
